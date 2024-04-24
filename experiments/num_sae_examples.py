@@ -14,19 +14,27 @@ import numpy as np
 from pathlib import Path
 import json
 import sys
-sys.path.append('../src')
+
+sys.path.append("../src")
 
 from sae import SparseAutoencoder
 from train import train
 from common_utils import head_labels_to_ground_truth
-from main import load_data, prepare_data, train_model, evaluate_model, evaluate_node_circuit, evaluate_edge_circuit
+from main import (
+    load_data,
+    prepare_data,
+    train_model,
+    evaluate_model,
+    evaluate_node_circuit,
+    evaluate_edge_circuit,
+)
 
 
 # Default configuration values
 task_mappings = {
-    'gt': 'Greater-than',
-    'ioi': 'Indirect Object Identification',
-    'ds': 'Docstring',
+    "gt": "Greater-than",
+    "ioi": "Indirect Object Identification",
+    "ds": "Docstring",
 }
 num_unique = 300
 n_epochs = 500
@@ -34,10 +42,11 @@ num_trials = 3
 lambda_ = 0.02
 normalise = False
 learning_rate = 0.001
-data_dir = '../data'
-model_dir = '../models'
+data_dir = "../data"
+model_dir = "../models"
 
 results = {}
+
 
 def load_data(task):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -60,24 +69,32 @@ def prepare_data(resid_streams, num_sae_examples):
 
 
 def train_model(model, optimizer, train_streams, eval_streams):
-    model = train(model, n_epochs, optimizer, train_streams, eval_streams, lambda_=lambda_)
+    model = train(
+        model, n_epochs, optimizer, train_streams, eval_streams, lambda_=lambda_
+    )
     model = model.to("cpu")
     return model
 
 
 def evaluate_model(model, resid_streams, head_labels, ground_truth, task_type):
-    _, heads, ground_truth_array = head_labels_to_ground_truth(head_labels, ground_truth)
+    _, heads, ground_truth_array = head_labels_to_ground_truth(
+        head_labels, ground_truth
+    )
     if task_type == "node":
-        roc_auc = evaluate_node_circuit(model, resid_streams, head_labels, ground_truth_array, normalise)
+        roc_auc = evaluate_node_circuit(
+            model, resid_streams, head_labels, ground_truth_array, normalise
+        )
     elif task_type == "edge":
-        roc_auc = evaluate_edge_circuit(model, resid_streams, head_labels, ground_truth_array, normalise, len(heads))
+        roc_auc = evaluate_edge_circuit(
+            model, resid_streams, head_labels, ground_truth_array, normalise, len(heads)
+        )
     else:
         raise ValueError("Task type must be either 'node' or 'edge'")
     return roc_auc
 
 
 def main():
-    tasks = ['ioi', 'gt', 'ds']
+    tasks = ["ioi", "gt", "ds"]
     num_sae_examples_list = [5, 10, 25, 50, 100, 250, 500]
 
     for task in tasks:
@@ -90,7 +107,9 @@ def main():
 
             for i in range(num_trials):
                 resid_streams, head_labels, ground_truth = load_data(task)
-                train_streams, eval_streams = prepare_data(resid_streams, num_sae_examples)
+                train_streams, eval_streams = prepare_data(
+                    resid_streams, num_sae_examples
+                )
 
                 model = SparseAutoencoder(
                     n_input_features=resid_streams.shape[-1],
@@ -102,16 +121,20 @@ def main():
                 model = train_model(model, optimizer, train_streams, eval_streams)
 
                 resid_streams = resid_streams.to("cpu")
-                roc_auc = evaluate_model(model, resid_streams, head_labels, ground_truth, task_type='node')
+                roc_auc = evaluate_model(
+                    model, resid_streams, head_labels, ground_truth, task_type="node"
+                )
                 roc_results.append(roc_auc)
 
-            print(f"Mean ROC = {np.mean(roc_results):.4f} (+/- {np.std(roc_results):.4f})\n")
+            print(
+                f"Mean ROC = {np.mean(roc_results):.4f} (+/- {np.std(roc_results):.4f})\n"
+            )
 
             if task not in results:
                 results[task] = {}
             results[task][num_sae_examples] = {
-                'mean_roc': np.mean(roc_results),
-                'std_roc': np.std(roc_results)
+                "mean_roc": np.mean(roc_results),
+                "std_roc": np.std(roc_results),
             }
 
 
