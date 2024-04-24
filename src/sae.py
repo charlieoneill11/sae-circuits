@@ -1,4 +1,5 @@
 """The Sparse Autoencoder Model."""
+
 from jaxtyping import Float
 import torch
 from torch import Tensor
@@ -78,7 +79,7 @@ class TiedBias(Module):
         Used in logging.
         """
         return f"position={self._bias_position}"
-    
+
 
 """Linear layer with unit norm weights."""
 
@@ -223,11 +224,16 @@ class ConstrainedUnitNormLinear(Module):
         # to the dictionary vectors, i.e. the component that moves to or from the center of the
         # hypersphere.
         dot_product: Float[Tensor, " out_features"] = einops.einsum(
-            grad, self.weight, "out_features in_features, out_features in_features -> out_features"
+            grad,
+            self.weight,
+            "out_features in_features, out_features in_features -> out_features",
         )
 
-        normalized_weight: Float[Tensor, "out_features in_features"] = self.weight / torch.norm(
-            self.weight, dim=self.DIMENSION_CONSTRAIN_UNIT_NORM, keepdim=True
+        normalized_weight: Float[Tensor, "out_features in_features"] = (
+            self.weight
+            / torch.norm(
+                self.weight, dim=self.DIMENSION_CONSTRAIN_UNIT_NORM, keepdim=True
+            )
         )
 
         projection = einops.einsum(
@@ -294,7 +300,6 @@ class ConstrainedUnitNormLinear(Module):
             f"in_features={self.in_features}, out_features={self.out_features}, "
             f"bias={self.bias is not None}"
         )
-
 
 
 class SparseAutoencoder(Module):
