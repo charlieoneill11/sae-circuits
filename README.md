@@ -4,7 +4,7 @@ TO-DO
 
 
 
-## Setup and Installation
+## Setup and Installation 📦
 
 This project uses [Poetry](https://python-poetry.org/) for dependency management. Follow these instructions to set up your environment.
 
