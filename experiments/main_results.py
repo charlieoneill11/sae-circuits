@@ -14,6 +14,9 @@ import torch.optim as optim
 import numpy as np
 from pathlib import Path
 import json
+import sys
+
+sys.path.append("../src")
 
 from sae import SparseAutoencoder
 from train import train
@@ -37,7 +40,7 @@ task_mappings = {
 num_unique = 200
 n_epochs = 500
 num_trials = 10
-lambda_ = 0.02
+lambda_ = 0.05
 normalise = False
 num_sae_examples = 10
 learning_rate = 0.001

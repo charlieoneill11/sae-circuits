@@ -1,4 +1,4 @@
-[![Python](https://img.shields.io/badge/python-3.12%2B-orange)]() [![Open Pull Requests](https://img.shields.io/github/issues-pr/ArthurConmy/Automatic-Circuit-Discovery.svg)](https://github.com/charlieoneill11/sae-circuits/pulls)
+[![Python](https://img.shields.io/badge/python-3.12%2B-orange)]() [![Open Pull Requests](https://img.shields.io/github/issues-pr/charlieoneill11/Automatic-Circuit-Discovery.svg)](https://github.com/charlieoneill11/sae-circuits/pulls)
 
 # SAE Circuits
 
@@ -6,10 +6,9 @@
 ![](assets/edge-method.png)
 
 
-
 ## Setup and Installation 📦
 
-This project uses [Poetry](https://python-poetry.org/) for dependency management. Follow these instructions to set up your environment.
+This project uses [Poetry](https://python-poetry.org/) for dependency management. However, we have only three dependencies: `pytorch`, `transformer_lens` (see [here](https://neelnanda-io.github.io/TransformerLens/)) and `black` (for code formatting). Follow these instructions to set up your environment.
 
 ### Prerequisites
 
