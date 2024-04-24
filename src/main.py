@@ -9,7 +9,11 @@ from pathlib import Path
 
 from sae import SparseAutoencoder
 from node import unique_to_positives_and_negatives, node_circuit_prediction
-from edge import positive_and_negative_cooccurrence, edge_circuit_prediction
+from edge import (
+    positive_and_negative_cooccurrence,
+    edge_circuit_prediction,
+    softmax_edge,
+)
 from train import train
 from common_utils import evaluate_circuit, head_labels_to_ground_truth
 
@@ -19,7 +23,7 @@ def parse_args():
     parser.add_argument(
         "--config",
         type=str,
-        default="configs/config.yaml",
+        default="config.yaml",
         help="Path to the configuration file",
     )
     return parser.parse_args()
@@ -175,13 +179,13 @@ def evaluate_edge_circuit(
     codes = np.argmax(learned_activations, axis=2)
 
     # Set k to be half of n_heads ** 2
-    k = (num_heads**2) // 2
+    k = (len(head_labels) ** 2) // 2
 
     # Get the edge circuit prediction
     positive_cooccurrence_matrix, negative_cooccurrence_matrix = (
         positive_and_negative_cooccurrence(codes, learned_activations)
     )
-    y_pred, y_true = edge_circuit_prediction(
+    y_pred, y_true, _ = edge_circuit_prediction(
         positive_cooccurrence_matrix,
         negative_cooccurrence_matrix,
         head_labels,

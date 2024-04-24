@@ -1,5 +1,5 @@
 task: 'ioi'
-task_type: 'node'
+task_type: 'edge'
 task_mappings:
   gt: 'Greater-than'
   ioi: 'Indirect Object Identification'
@@ -11,7 +11,7 @@ num_unique: 200
 n_epochs: 500
 num_trials: 1
 lambda_: 0.02
-normalise: false
+normalise: False
 num_sae_examples: 10
 
 learning_rate: 0.001

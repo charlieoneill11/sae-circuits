@@ -141,4 +141,4 @@ def edge_circuit_prediction(
     # Normalise y_pred with softmax
     y_pred = softmax_edge(y_pred)
 
-    return y_pred, y_true
+    return y_pred, y_true, circuit_components

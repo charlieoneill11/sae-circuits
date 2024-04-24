@@ -1,9 +1,9 @@
 """
-This script runs an experiment to evaluate the performance of the Sparse Autoencoder (SAE) on three tasks:
+This script runs experiments to evaluate the performance of the Sparse Autoencoder (SAE) on three tasks:
 'ioi' (Indirect Object Identification), 'gt' (Greater-than), and 'ds' (Docstring).
-The script uses a set of specified hyperparameters and runs 10 trials for each task.
+The script uses a set of specified hyperparameters and runs 10 trials for each task and each task type (edge and node).
 The model's performance is evaluated using the ROC AUC metric, and the mean and standard deviation of the scores
-across the trials are reported for each task.
+across the trials are reported for each task and task type.
 The results are saved in a JSON file named "main_results.json" in the "results" folder.
 """
 
@@ -44,7 +44,7 @@ lambda_ = 0.05
 normalise = False
 num_sae_examples = 10
 learning_rate = 0.001
-task_type = "node"
+task_types = ["edge", "node"]
 data_dir = "../data"
 model_dir = "../models"
 
@@ -71,7 +71,8 @@ def prepare_data(resid_streams):
     return train_streams, eval_streams
 
 
-def train_model(model, optimizer, train_streams, eval_streams):
+def train_model(model, optimizer, train_streams, eval_streams, task):
+    lambda_ = 0.05 if task == "ds" else 0.02
     model = train(
         model, n_epochs, optimizer, train_streams, eval_streams, lambda_=lambda_
     )
@@ -102,40 +103,44 @@ def main():
     for task in tasks:
         print(f"Task: {task_mappings[task]}")
 
-        roc_results = []
+        for task_type in task_types:
+            print(f"Task Type: {task_type}")
+            roc_results = []
 
-        for i in range(num_trials):
-            print(f"Trial {i + 1}/{num_trials}")
-            resid_streams, head_labels, ground_truth = load_data(task)
-            train_streams, eval_streams = prepare_data(resid_streams)
+            for i in range(num_trials):
+                print(f"Trial {i + 1}/{num_trials}")
+                resid_streams, head_labels, ground_truth = load_data(task)
+                train_streams, eval_streams = prepare_data(resid_streams)
 
-            model = SparseAutoencoder(
-                n_input_features=resid_streams.shape[-1],
-                n_learned_features=num_unique,
-                geometric_median_dataset=None,
-            ).to(torch.device("cuda" if torch.cuda.is_available() else "cpu"))
-            optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+                model = SparseAutoencoder(
+                    n_input_features=resid_streams.shape[-1],
+                    n_learned_features=num_unique,
+                    geometric_median_dataset=None,
+                ).to(torch.device("cuda" if torch.cuda.is_available() else "cpu"))
+                optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
-            model = train_model(model, optimizer, train_streams, eval_streams)
+                model = train_model(model, optimizer, train_streams, eval_streams, task)
 
-            resid_streams = resid_streams.to("cpu")
-            roc_auc = evaluate_model(
-                model, resid_streams, head_labels, ground_truth, task_type=task_type
+                resid_streams = resid_streams.to("cpu")
+                roc_auc = evaluate_model(
+                    model, resid_streams, head_labels, ground_truth, task_type=task_type
+                )
+                roc_results.append(roc_auc)
+
+            print(
+                f"Mean ROC = {np.mean(roc_results):.4f} (+/- {np.std(roc_results):.4f})\n"
             )
-            roc_results.append(roc_auc)
 
-        print(
-            f"Mean ROC = {np.mean(roc_results):.4f} (+/- {np.std(roc_results):.4f})\n"
-        )
-
-        results[task] = {
-            "mean_roc": np.mean(roc_results),
-            "std_roc": np.std(roc_results),
-        }
+            if task not in results:
+                results[task] = {}
+            results[task][task_type] = {
+                "mean_roc": np.mean(roc_results),
+                "std_roc": np.std(roc_results),
+            }
 
 
 def save_results(results):
-    script_name = f"main_results_{task_type}"
+    script_name = "main_results"
     results_dir = Path("results")
     results_dir.mkdir(exist_ok=True)
     results_file = results_dir / f"{script_name}.json"
