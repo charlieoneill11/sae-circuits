@@ -2,8 +2,8 @@
 
 # SAE Circuits
 
-![](assets/method.pdf)
-![](assets/edge_method.pdf)
+![](assets/method-1.png)
+![](assets/edge_method-1.png)
 
 
 
