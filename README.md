@@ -1,6 +1,6 @@
-# SAE Circuits
+[![Python](https://img.shields.io/badge/python-3.12%2B-orange)]() [![Open Pull Requests](https://img.shields.io/github/issues-pr/ArthurConmy/Automatic-Circuit-Discovery.svg)](https://github.com/charlieoneill11/sae-circuits/pulls)
 
-![GitHub](https://img.shields.io/github/license/charlieoneill11/sae-circuits)
+# SAE Circuits
 
 ![](assets/method.pdf)
 ![](assets/edge_method.pdf)
