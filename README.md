@@ -1,6 +1,5 @@
 # SAE Circuits
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/charlieoneill11/sae-circuits/CI)
 ![GitHub](https://img.shields.io/github/license/charlieoneill11/sae-circuits)
 
 ![](assets/method.pdf)
