@@ -3,7 +3,7 @@
 # SAE Circuits
 
 ![](assets/node-method.png)
-![](assets/edge_method.png)
+![](assets/edge-method.png)
 
 
 
