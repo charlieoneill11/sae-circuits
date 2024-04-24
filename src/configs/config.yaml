@@ -1,0 +1,25 @@
+task: 'ioi'
+task_type: 'node'
+task_mappings:
+  gt: 'Greater-than'
+  ioi: 'Indirect Object Identification'
+  ds: 'Docstring'
+  induction: 'Induction'
+  tracr-reverse: 'Tracr-Reverse'
+
+num_unique: 200
+n_epochs: 500
+num_trials: 1
+lambda_: 0.02
+normalise: false
+num_sae_examples: 10
+
+learning_rate: 0.001
+
+data_dir: '../data'
+resid_streams_path: '{task}/resid_streams.pt'
+labels_path: '{task}/labels.pt'
+ground_truth_path: '{task}/ground_truth.pt'
+
+model_dir: '../models'
+model_save_path: '{task}/sparse_autoencoder.pt'

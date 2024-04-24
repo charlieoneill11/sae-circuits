@@ -19,13 +19,15 @@ def parse_args():
     parser.add_argument(
         "--config",
         type=str,
-        default="config.yaml",
+        default="configs/config.yaml",
         help="Path to the configuration file",
     )
     return parser.parse_args()
 
 
 def load_config(config_path):
+    # Path is configs folder + provided config file
+    config_path = Path("configs") / config_path
     with open(config_path, "r") as f:
         config = yaml.safe_load(f)
     return config
@@ -136,7 +138,6 @@ def main(config):
         )
         roc_results.append(roc_auc)
 
-    print(roc_results)
     print(f"Mean ROC = {np.mean(roc_results):.4f} (+/- {np.std(roc_results):.4f})")
 
 
