@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "sae-circuits"
+version = "0.1.0"
+description = ""
+authors = ["charlieoneill11 <cponeill00@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+transformer-lens = "1.15.0"
+torch = "2.2.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

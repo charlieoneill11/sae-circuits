@@ -5,11 +5,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
-from tqdm import tqdm
-from sklearn.metrics import roc_curve, auc
-import plotly.express as px
-import plotly.io as pio
-import plotly.graph_objects as go
 from pathlib import Path
 
 from sae import SparseAutoencoder

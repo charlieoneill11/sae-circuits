@@ -22,4 +22,4 @@ labels_path: '{task}/labels.pt'
 ground_truth_path: '{task}/ground_truth.pt'
 
 model_dir: '../models'
-model_save_path: '{task}/sparse_autoencoder_{task_type}.pt'
+model_save_path: '{task}/sparse_autoencoder.pt'

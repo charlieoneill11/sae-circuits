@@ -1,17 +1,7 @@
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
-import torch.optim as optim
-import numpy as np
 import einops
-import fancy_einsum
 from tqdm import tqdm
-import re
-from sklearn.metrics import roc_curve, auc
-import transformer_lens.utils as utils
-import plotly.express as px
-import plotly.io as pio
-import plotly.graph_objects as go
 
 
 def loss_fn(decoded_activations, learned_activations, resid_streams, lambda_=0.01):
